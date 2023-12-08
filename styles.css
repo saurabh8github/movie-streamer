@@ -1,0 +1,79 @@
+/* Global styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.resizable-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 20px;
+}
+
+.resizable {
+  flex: 2; /* Allocate more space to the streaming video section */
+  min-width: 300px;
+  max-width: 900px; /* Adjust as needed */
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 0 10px;
+}
+
+h2 {
+  margin-bottom: 15px;
+  color: #333333;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input[type="text"],
+button {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+button {
+  cursor: pointer;
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Styling for video elements */
+video {
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+/* Styling for chat section */
+#chatBox {
+  height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 5px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+}

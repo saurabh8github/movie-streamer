@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Movie Watching Room</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+</head>
+<body>
+  <div id="streamer" class="resizable">
+    <h2>Movie Streamer</h2>
+    <label for="roomIdStreamer">Room ID:</label>
+    <input type="text" id="roomIdStreamer">
+    <button onclick="startStreaming()">Start Streaming</button>
+    <br><br>
+    <!-- Add a video player for the movie streaming -->
+    <video id="moviePlayer" controls width="400">
+      <!-- Source will be added dynamically -->
+    </video>
+  </div>
+
+  <div id="viewer" class="resizable">
+    <h2>Viewer</h2>
+    <label for="roomIdViewer">Room ID:</label>
+    <input type="text" id="roomIdViewer">
+    <button onclick="joinRoom()">Join Room</button>
+    <br><br>
+    <div class="video-chat">
+      <!-- Viewer video chat area -->
+      <h3>Video Chat</h3>
+      <video id="localVideo" width="300" autoplay muted playsinline></video>
+      <video id="remoteVideo" width="300" autoplay playsinline></video>
+    </div>
+    <br>
+    <div class="chat-section">
+      <!-- Viewer chat area -->
+      <h3>Chat</h3>
+      <div id="chatBox" class="chatBox"></div>
+      <input type="text" id="chatMessage" placeholder="Type your message...">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
+  <script>
+    const socket = io();
+
+    let localStream;
+
+    async function startStreaming() {
+      const roomId = document.getElementById('roomIdStreamer').value;
+      // Replace 'your_movie_url' with the actual URL of the movie to stream
+      const movieUrl = 'Prerequisites_1.mp4';
+      
+      // Emit a message to start streaming the movie
+      socket.emit('startStreaming', { roomId, movieUrl });
+      
+      // Set the movie player source
+      const moviePlayer = document.getElementById('moviePlayer');
+      moviePlayer.src = movieUrl;
+
+      // Get local video stream for video chat
+      try {
+        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        const localVideo = document.getElementById('localVideo');
+        localVideo.srcObject = localStream;
+      } catch (err) {
+        console.error('Error accessing camera and/or microphone:', err);
+      }
+    }
+
+    async function joinRoom() {
+      const roomId = document.getElementById('roomIdViewer').value;
+      // Emit a message to join the room as a viewer
+      socket.emit('joinRoom', roomId);
+
+      // Get local video stream for video chat
+      try {
+        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        const localVideo = document.getElementById('localVideo');
+        localVideo.srcObject = localStream;
+      } catch (err) {
+        console.error('Error accessing camera and/or microphone:', err);
+      }
+    }
+
+    // Function to handle receiving chat messages
+    socket.on('chatMessage', (message) => {
+      const chatBox = document.getElementById('chatBox');
+      chatBox.innerHTML += `<p>${message}</p>`;
+      chatBox.scrollTop = chatBox.scrollHeight;
+    });
+
+    function sendMessage() {
+      const message = document.getElementById('chatMessage').value;
+      socket.emit('sendMessage', message);
+      document.getElementById('chatMessage').value = '';
+    }
+  </script>
+</body>
+</html>
